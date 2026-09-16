@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clipboard Test</title>
+<style>
+body{font-family:system-ui;padding:24px;max-width:720px;margin:auto}
+button{min-height:48px;padding:0 16px;margin:6px 0}
+textarea{width:100%;height:160px;margin-top:12px}
+#status{margin-top:12px;padding:10px;border:1px solid #ddd}
+</style>
+</head>
+<body>
+<h2>Clipboard Test</h2>
+<p>Test ini memakai helper yang sama dengan dashboard.</p>
+<textarea id="preview">SELASA, 15 SEPTEMBER 2026 JAM KE-3
+
+Kelas X
+LBI (Essay) - TVGG93970
+
+Kelas XI
+Seni Budaya (Essay) - PAUK78979
+
+Kelas XII
+PJOK (Essay) - CERJ26432</textarea>
+<button id="copy">Salin ke Clipboard</button>
+<button id="paste">Tempel dari Clipboard</button>
+<div id="status"></div>
+<script type="module">
+import { copyText } from "./js/utils.js";
+const status = document.getElementById("status");
+const preview = document.getElementById("preview");
+
+document.getElementById("copy").addEventListener("click", async () => {
+  const result = copyText(preview.value);
+  const ok = result instanceof Promise ? await result : result;
+  status.textContent = ok ? "BERHASIL COPY" : "GAGAL COPY";
+});
+
+document.getElementById("paste").addEventListener("click", async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    preview.value = text;
+    status.textContent = "BERHASIL PASTE";
+  } catch (e) {
+    status.textContent = "Browser tidak mengizinkan readText().";
+  }
+});
+</script>
+</body>
+</html>
