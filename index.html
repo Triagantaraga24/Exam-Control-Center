@@ -1,550 +1,161 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exam Control Center — STS Ganjil 2026/2027</title>
-<meta name="description" content="Dashboard data ujian dengan filter kelas, jam, mapel, jenis soal, hari, waktu dan salin token.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="./css/styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#1677ff">
+  <title>CBT Token Dashboard — STS Ganjil 2026/2027</title>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-
-
-<section id="loginView" class="login-shell">
-  <div class="login-card">
-    <div class="brand-mark"><i class="fa-solid fa-shield-halved"></i></div>
-    <div class="login-title">Exam Control Center</div>
-    <div class="login-subtitle">Login untuk membuka dashboard data Token ujian.</div>
-    <form id="loginForm">
-      <div class="form-group">
-        <label class="form-label" for="username">Username</label>
-        <div class="input-wrap">
-          <i class="fa-regular fa-user"></i>
-          <input id="username" autocomplete="username" placeholder="Masukkan username" required>
-        </div>
+  <section id="loginPage" class="login-page">
+    <div class="login-shell">
+      <div class="brand-mark">CBT</div>
+      <div class="login-copy">
+        <span class="eyebrow">STS GANJIL 2026/2027</span>
+        <h1>Token Dashboard</h1>
+        <p>Kelola, filter, pilih, dan salin token ruang ujian dari satu dashboard.</p>
       </div>
-      <div class="form-group">
-        <label class="form-label" for="password">Password</label>
-        <div class="input-wrap">
-          <i class="fa-solid fa-lock"></i>
-          <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required>
-          <button class="password-toggle" type="button" id="togglePassword" aria-label="Tampilkan password"><i class="fa-regular fa-eye"></i></button>
-        </div>
-      </div>
-      <button class="login-btn" type="submit"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Masuk Dashboard</button>
-      <div id="loginError" class="login-error hidden"></div>
-    </form>
-    <div class="login-foot">Silahkan Masukkan Kredensial Anda.</div>
-  </div>
-</section>
-
-<section id="appView" class="app hidden">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-mark"><i class="fa-solid fa-layer-group"></i></div>
-        <div class="brand-text">
-          <div class="brand-title">Exam Control Center</div>
-          <div class="brand-subtitle">STS Ganjil 2026/2027 · Data Ujian</div>
-        </div>
-      </div>
-      <div class="top-actions">
-        <div class="user-pill"><span class="avatar"><i class="fa-solid fa-user"></i></span><span id="loggedUser">admin</span></div>
-        <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Keluar</span></button>
-      </div>
-    </div>
-  </header>
-
-  <main class="page">
-    <div class="hero">
-      <div>
-        <h1 class="hero-title">Jadwal & Token Ujian</h1>
-        <p class="hero-desc">Cari jadwal, cek detail kelas, dan salin token ujian dengan cepat.</p>
-      </div>
-      <div class="user-pill"><i class="fa-regular fa-calendar"></i> 132 data ujian</div>
-    </div>
-
-    <div class="stats">
-      <div class="stat-card"><div class="stat-top"><div class="stat-icon"><i class="fa-solid fa-list-check"></i></div></div><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total data</div></div>
-      <div class="stat-card"><div class="stat-top"><div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div></div><div class="stat-value" id="statClasses">0</div><div class="stat-label">Kelas</div></div>
-      <div class="stat-card"><div class="stat-top"><div class="stat-icon"><i class="fa-solid fa-book"></i></div></div><div class="stat-value" id="statSubjects">0</div><div class="stat-label">Mata pelajaran</div></div>
-      <div class="stat-card"><div class="stat-top"><div class="stat-icon"><i class="fa-solid fa-key"></i></div></div><div class="stat-value" id="statTokens">0</div><div class="stat-label">Token unik</div></div>
-    </div>
-
-    <section class="filters">
-      <div class="filter-head">
-        <div class="section-title"><i class="fa-solid fa-sliders"></i> Filter Data Ujian</div>
-        <button class="reset-btn" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-      </div>
-      <div class="filter-grid">
-        <div class="field search-field"><label>Pencarian</label><input id="searchFilter" placeholder="Cari mapel, kelas, kode/token..."></div>
-        <div class="field"><label>Kelas</label><select id="classFilter"><option value="">Semua kelas</option></select></div>
-        <div class="field"><label>Jam ke</label><select id="hourFilter"><option value="">Semua jam</option></select></div>
-        <div class="field"><label>Mapel</label><select id="subjectFilter"><option value="">Semua mapel</option></select></div>
-        <div class="field"><label>Jenis soal</label><select id="typeFilter"><option value="">PG + Essay</option><option value="PG">PG</option><option value="Essay">Essay</option></select></div>
-        <div class="field"><label>Hari</label><select id="dayFilter"><option value="">Semua hari</option></select></div>
-        <div class="field"><label>Waktu ujian</label><select id="timeFilter"><option value="">Semua waktu</option></select></div>
-      </div>
-    </section>
-
-
-    <section id="copyResultPanel" class="copy-result-panel hidden" aria-live="polite">
-      <div class="copy-result-head">
-        <div class="copy-result-title">
-          <span class="copy-result-icon"><i class="fa-solid fa-clipboard-check"></i></span>
-          <div>
-            <div class="copy-result-title-main">Hasil Token dari Filter</div>
-            <div class="copy-result-title-sub" id="copyResultMeta">0 token</div>
-          </div>
-        </div>
-        <div class="copy-result-actions">
-          <button class="toolbar-btn" id="copyResultAgainBtn" type="button">
-            <i class="fa-regular fa-copy"></i> Salin Lagi
-          </button>
-          <button class="icon-btn copy-result-close" id="copyResultCloseBtn" type="button" aria-label="Tutup hasil">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-      <pre id="copyResultContent" class="copy-result-content"></pre>
-    </section>
-
-    <section class="table-card">
-      <div class="table-toolbar">
-        <div class="result-count" id="resultCount">Menampilkan 0 data</div>
-        <div class="toolbar-actions">
-          <button class="toolbar-btn primary" id="copyFilteredBtn" type="button">
-            <i class="fa-regular fa-copy"></i> Salin Token Hasil Filter
-          </button>
-          <button class="toolbar-btn" id="addAccountBtn" type="button">
-            <i class="fa-solid fa-user-plus"></i> Tambah Akun
-          </button>
-          <div class="page-size"><span>Per halaman</span><select id="pageSize"><option>15</option><option>25</option><option>50</option><option>100</option></select></div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Mapel / Kelas</th>
-              <th>Hari & Tanggal</th>
-              <th>Jam</th>
-              <th>Waktu Ujian</th>
-              <th>Token Ujian</th>
-              <th>Publish</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-      <div class="pagination">
-        <div class="pagination-info" id="paginationInfo"></div>
-        <div class="pagination-controls" id="paginationControls"></div>
-      </div>
-    </section>
-  </main>
-</section>
-
-<div id="modalBackdrop" class="modal-backdrop hidden">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-head">
-      <div class="modal-title">Detail Ujian</div>
-      <button class="modal-close" id="modalClose" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
-<script>
-const EXAM_DATA = [{"subject":"Seni Budaya","class_grade":"X","type":"PG","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"MUBG75006","publish_status":"NO","publish_date":"","exam_time":"-","title":"Seni Budaya - Kelas X (PG)"},{"subject":"Seni Budaya","class_grade":"XI","type":"PG","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"NCFB92559","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"Seni Budaya - Kelas XI (PG)"},{"subject":"Sejarah","class_grade":"XII","type":"Essay","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"KJKX48517","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Sejarah - Kelas XII (Essay)"},{"subject":"Sejarah","class_grade":"XII","type":"PG","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"KMBG04668","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Sejarah - Kelas XII (PG)"},{"subject":"Agama Katolik","class_grade":"XII","type":"Essay","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"QZKU89924","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Katolik - Kelas XII (Essay)"},{"subject":"Agama Katolik","class_grade":"XII","type":"PG","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"VRZD17117","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Katolik - Kelas XII (PG)"},{"subject":"Agama Kristen","class_grade":"XII","type":"Essay","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"ZZSC22574","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Kristen - Kelas XII (Essay)"},{"subject":"Agama Kristen","class_grade":"XII","type":"PG","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"UXGH02096","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Kristen - Kelas XII (PG)"},{"subject":"Agama Islam","class_grade":"XII","type":"Essay","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"CPJV43470","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Islam - Kelas XII (Essay)"},{"subject":"Agama Islam","class_grade":"XII","type":"PG","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"XQHX16496","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Islam - Kelas XII (PG)"},{"subject":"Pendidikan Pancasila","class_grade":"X","type":"Essay","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"VXVN67078","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas X (Essay)"},{"subject":"Pendidikan Pancasila","class_grade":"X","type":"PG","day":"Senin","date":"21 September 2026","hour":3,"time":"11.00 - 12.30","code":"PGAH91709","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas X (PG)"},{"subject":"Bahasa Inggris","class_grade":"XII","type":"Essay","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"BYWB15669","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris - Kelas XII (Essay)"},{"subject":"Bahasa Inggris","class_grade":"XII","type":"PG","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"FZRH51673","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris - Kelas XII (PG)"},{"subject":"Informatika","class_grade":"XI","type":"Essay","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"UDHG06838","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas XI (Essay)"},{"subject":"Informatika","class_grade":"XI","type":"PG","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"KFGH69515","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas XI (PG)"},{"subject":"Bahasa Jepang","class_grade":"X","type":"Essay","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"AZPE62175","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas X (Essay)"},{"subject":"Bahasa Jepang","class_grade":"X","type":"PG","day":"Senin","date":"21 September 2026","hour":2,"time":"09.00 - 10.30","code":"JZML98634","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas X (PG)"},{"subject":"Informatika","class_grade":"XII","type":"Essay","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"FMFG61360","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas XII (Essay)"},{"subject":"Informatika","class_grade":"XII","type":"PG","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"EAVV40650","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas XII (PG)"},{"subject":"Bahasa Inggris","class_grade":"XI","type":"Essay","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"GTGK54186","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris - Kelas XI (Essay)"},{"subject":"Bahasa Inggris","class_grade":"XI","type":"PG","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"NXSB20339","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris - Kelas XI (PG)"},{"subject":"Geografi","class_grade":"X","type":"Essay","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"TFMR76511","publish_status":"NO","publish_date":"","exam_time":"-","title":"Geografi - Kelas X (Essay)"},{"subject":"Geografi","class_grade":"X","type":"PG","day":"Senin","date":"21 September 2026","hour":1,"time":"07.00 - 08.30","code":"PPUM12561","publish_status":"NO","publish_date":"","exam_time":"-","title":"Geografi - Kelas X (PG)"},{"subject":"KKA","class_grade":"XII","type":"Essay","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"ZXJH22178","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas XII (Essay)"},{"subject":"KKA","class_grade":"XII","type":"PG","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"XHCX41370","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas XII (PG)"},{"subject":"Bahasa Jepang","class_grade":"XI","type":"Essay","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"APYN05034","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas XI (Essay)"},{"subject":"Bahasa Jepang","class_grade":"XI","type":"PG","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"LWPA31210","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas XI (PG)"},{"subject":"Seni Budaya","class_grade":"X","type":"Essay","day":"Jumat","date":"18 September 2026","hour":3,"time":"10.00 - 11.30","code":"QYXA23258","publish_status":"NO","publish_date":"","exam_time":"-","title":"Seni Budaya - Kelas X (Essay)"},{"subject":"Bahasa Jepang","class_grade":"XII","type":"Essay","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"BUVC02288","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas XII (Essay)"},{"subject":"Bahasa Jepang","class_grade":"XII","type":"PG","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"TSEF54668","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Jepang - Kelas XII (PG)"},{"subject":"PJOK","class_grade":"XI","type":"Essay","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"TNKJ35203","publish_status":"NO","publish_date":"","exam_time":"-","title":"PJOK - Kelas XI (Essay)"},{"subject":"PJOK","class_grade":"XI","type":"PG","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"FTYZ59064","publish_status":"NO","publish_date":"","exam_time":"-","title":"PJOK - Kelas XI (PG)"},{"subject":"KKA","class_grade":"X","type":"Essay","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"MPYZ03606","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas X (Essay)"},{"subject":"KKA","class_grade":"X","type":"PG","day":"Jumat","date":"18 September 2026","hour":2,"time":"08.15 - 09.45","code":"FSRA50137","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas X (PG)"},{"subject":"Kimia","class_grade":"XII","type":"Essay","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"NKSD86210","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas XII (Essay)"},{"subject":"Kimia","class_grade":"XII","type":"PG","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"DEZN13827","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas XII (PG)"},{"subject":"Bahasa Inggris TL","class_grade":"XII","type":"Essay","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"QLJY13696","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris TL - Kelas XII (Essay)"},{"subject":"Bahasa Inggris TL","class_grade":"XII","type":"PG","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"PBKL24672","publish_status":"NO","publish_date":"","exam_time":"-","title":"Bahasa Inggris TL - Kelas XII (PG)"},{"subject":"Pendidikan Pancasila","class_grade":"XI","type":"Essay","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"HKNW67933","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas XI (Essay)"},{"subject":"Pendidikan Pancasila","class_grade":"XI","type":"PG","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"YVWJ27490","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas XI (PG)"},{"subject":"Biologi","class_grade":"X","type":"Essay","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"ZXVE55704","publish_status":"NO","publish_date":"","exam_time":"-","title":"Biologi - Kelas X (Essay)"},{"subject":"Biologi","class_grade":"X","type":"PG","day":"Jumat","date":"18 September 2026","hour":1,"time":"06.30 - 08.00","code":"YZSN24004","publish_status":"NO","publish_date":"","exam_time":"-","title":"Biologi - Kelas X (PG)"},{"subject":"Seni Budaya","class_grade":"XII","type":"Essay","day":"Kamis","date":"17 September 2026","hour":3,"time":"11.00 - 12.30","code":"YQRG91389","publish_status":"NO","publish_date":"","exam_time":"-","title":"Seni Budaya - Kelas XII (Essay)"},{"subject":"Seni Budaya","class_grade":"XII","type":"PG","day":"Kamis","date":"17 September 2026","hour":3,"time":"11.00 - 12.30","code":"YVMP14428","publish_status":"NO","publish_date":"","exam_time":"-","title":"Seni Budaya - Kelas XII (PG)"},{"subject":"PJOK","class_grade":"X","type":"Essay","day":"Kamis","date":"17 September 2026","hour":3,"time":"11.00 - 12.30","code":"JNBM14104","publish_status":"NO","publish_date":"","exam_time":"-","title":"PJOK - Kelas X (Essay)"},{"subject":"PJOK","class_grade":"X","type":"PG","day":"Kamis","date":"17 September 2026","hour":3,"time":"11.00 - 12.30","code":"GAFC01273","publish_status":"NO","publish_date":"","exam_time":"-","title":"PJOK - Kelas X (PG)"},{"subject":"Matematika TL","class_grade":"XII","type":"Essay","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"GDVR10320","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika TL - Kelas XII (Essay)"},{"subject":"Matematika TL","class_grade":"XII","type":"PG","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"GCXY27529","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika TL - Kelas XII (PG)"},{"subject":"Biologi","class_grade":"XII","type":"Essay","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"GVLB54909","publish_status":"NO","publish_date":"","exam_time":"-","title":"Biologi - Kelas XII (Essay)"},{"subject":"Biologi","class_grade":"XII","type":"PG","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"WFJK62709","publish_status":"NO","publish_date":"","exam_time":"-","title":"Biologi - Kelas XII (PG)"},{"subject":"Sosiologi","class_grade":"XI","type":"Essay","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"NDGD87712","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XI (Essay)"},{"subject":"Sosiologi","class_grade":"XI","type":"PG","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"JWLS87860","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XI (PG)"},{"subject":"Fisika","class_grade":"XI","type":"Essay","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"QBNW51056","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XI (Essay)"},{"subject":"Fisika","class_grade":"XI","type":"PG","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"BJSH06602","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XI (PG)"},{"subject":"Matematika","class_grade":"X","type":"Essay","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"ZQDN41794","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika - Kelas X (Essay)"},{"subject":"Matematika","class_grade":"X","type":"PG","day":"Kamis","date":"17 September 2026","hour":2,"time":"09.00 - 10.30","code":"YQTV44622","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika - Kelas X (PG)"},{"subject":"Pendidikan Pancasila","class_grade":"XII","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"VCZD25502","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas XII (Essay)"},{"subject":"Pendidikan Pancasila","class_grade":"XII","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"KVFS11498","publish_status":"NO","publish_date":"","exam_time":"-","title":"Pendidikan Pancasila - Kelas XII (PG)"},{"subject":"Fisika","class_grade":"XI","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"CEDU17686","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XI (Essay)"},{"subject":"Fisika","class_grade":"XI","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"KFFU40864","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XI (PG)"},{"subject":"Sosiologi","class_grade":"XI","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"HQNM02096","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XI (Essay)"},{"subject":"Sosiologi","class_grade":"XI","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"QDJG22721","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XI (PG)"},{"subject":"Matematika TL","class_grade":"XI","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"DFKS33609","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika TL - Kelas XI (Essay)"},{"subject":"Matematika TL","class_grade":"XI","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"WTUK79956","publish_status":"NO","publish_date":"","exam_time":"-","title":"Matematika TL - Kelas XI (PG)"},{"subject":"Agama Katolik","class_grade":"X","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"WSSW03938","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Katolik - Kelas X (Essay)"},{"subject":"Agama Katolik","class_grade":"X","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"GGKC68886","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Katolik - Kelas X (PG)"},{"subject":"Agama Kristen","class_grade":"X","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"TJCB70234","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Kristen - Kelas X (Essay)"},{"subject":"Agama Kristen","class_grade":"X","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"VQCR44450","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Kristen - Kelas X (PG)"},{"subject":"Agama Islam","class_grade":"X","type":"Essay","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"ACHT22380","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Islam - Kelas X (Essay)"},{"subject":"Agama Islam","class_grade":"X","type":"PG","day":"Kamis","date":"17 September 2026","hour":1,"time":"07.00 - 08.30","code":"ELZE31012","publish_status":"NO","publish_date":"","exam_time":"-","title":"Agama Islam - Kelas X (PG)"},{"subject":"KKA","class_grade":"XI","type":"Essay","day":"Rabu","date":"16 September 2026","hour":3,"time":"07.00 - 08.30","code":"VWRG08027","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas XI (Essay)"},{"subject":"KKA","class_grade":"XI","type":"PG","day":"Rabu","date":"16 September 2026","hour":3,"time":"11.00 - 12.30","code":"QPPU04604","publish_status":"NO","publish_date":"","exam_time":"-","title":"KKA - Kelas XI (PG)"},{"subject":"Sosiologi","class_grade":"X","type":"Essay","day":"Rabu","date":"16 September 2026","hour":3,"time":"11.00 - 12.30","code":"EXAE52782","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas X (Essay)"},{"subject":"Sosiologi","class_grade":"X","type":"PG","day":"Rabu","date":"16 September 2026","hour":3,"time":"11.00 - 12.30","code":"UGKR79126","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas X (PG)"},{"subject":"Sejarah","class_grade":"XI","type":"Essay","day":"Rabu","date":"16 September 2026","hour":2,"time":"09.00 - 10.30","code":"SUHW01435","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sejarah - Kelas XI (Essay)"},{"subject":"Sejarah","class_grade":"XI","type":"PG","day":"Rabu","date":"16 September 2026","hour":2,"time":"09.00 - 10.30","code":"JNSY04802","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sejarah - Kelas XI (PG)"},{"subject":"Kimia","class_grade":"X","type":"Essay","day":"Rabu","date":"16 September 2026","hour":2,"time":"09.00 - 10.30","code":"TKJG55575","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas X (Essay)"},{"subject":"Kimia","class_grade":"X","type":"PG","day":"Rabu","date":"16 September 2026","hour":2,"time":"09.00 - 10.30","code":"GSHX04248","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas X (PG)"},{"subject":"Fisika","class_grade":"XII","type":"Essay","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"GUWY50406","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XII (Essay)"},{"subject":"Fisika","class_grade":"XII","type":"PG","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"SJBH42434","publish_status":"NO","publish_date":"","exam_time":"-","title":"Fisika - Kelas XII (PG)"},{"subject":"Sosiologi","class_grade":"XII","type":"Essay","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"DKZY34304","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XII (Essay)"},{"subject":"Sosiologi","class_grade":"XII","type":"PG","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"UNWV29440","publish_status":"NO","publish_date":"","exam_time":"-","title":"Sosiologi - Kelas XII (PG)"},{"subject":"Ekonomi","class_grade":"XI","type":"Essay","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"NSCQ60383","publish_status":"NO","publish_date":"","exam_time":"-","title":"Ekonomi - Kelas XI (Essay)"},{"subject":"Ekonomi","class_grade":"XI","type":"PG","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"PAUZ27999","publish_status":"NO","publish_date":"","exam_time":"-","title":"Ekonomi - Kelas XI (PG)"},{"subject":"Kimia","class_grade":"XI","type":"Essay","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"MHNS20372","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas XI (Essay)"},{"subject":"Kimia","class_grade":"XI","type":"PG","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"CVLV04591","publish_status":"NO","publish_date":"","exam_time":"-","title":"Kimia - Kelas XI (PG)"},{"subject":"Informatika","class_grade":"X","type":"Essay","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"TVXP01518","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas X (Essay)"},{"subject":"Informatika","class_grade":"X","type":"PG","day":"Rabu","date":"16 September 2026","hour":1,"time":"07.00 - 08.30","code":"RQNN16593","publish_status":"NO","publish_date":"","exam_time":"-","title":"Informatika - Kelas X (PG)"},{"subject":"PJOK","class_grade":"XII","type":"Essay","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"CERJ26432","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"PJOK - Kelas XII (Essay)"},{"subject":"PJOK","class_grade":"XII","type":"PG","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"MARE35395","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"PJOK - Kelas XII (PG)"},{"subject":"Seni Budaya","class_grade":"XI","type":"Essay","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"PAUK78979","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"Seni Budaya - Kelas XI (Essay)"},{"subject":"LBI","class_grade":"X","type":"Essay","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"TVGG93970","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"LBI - Kelas X (Essay)"},{"subject":"LBI","class_grade":"X","type":"PG","day":"Selasa","date":"15 September 2026","hour":3,"time":"11.00 - 12.30","code":"ANVG64188","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 11:00:00 GMT","title":"LBI - Kelas X (PG)"},{"subject":"Matematika","class_grade":"XII","type":"Essay","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"UCWA77114","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Matematika - Kelas XII (Essay)"},{"subject":"Matematika","class_grade":"XII","type":"PG","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"BGRC16136","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Matematika - Kelas XII (PG)"},{"subject":"Bahasa Indonesia","class_grade":"XI","type":"Essay","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"YUYB89193","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Bahasa Indonesia - Kelas XI (Essay)"},{"subject":"Bahasa Indonesia","class_grade":"XI","type":"PG","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"ZGMV38606","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Bahasa Indonesia - Kelas XI (PG)"},{"subject":"Ekonomi","class_grade":"X","type":"Essay","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"ZBPG21264","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Ekonomi - Kelas X (Essay)"},{"subject":"Ekonomi","class_grade":"X","type":"PG","day":"Selasa","date":"15 September 2026","hour":2,"time":"09.00 - 10.30","code":"CMQZ41144","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 09:00:00 GMT","title":"Ekonomi - Kelas X (PG)"},{"subject":"Agama Katolik","class_grade":"XI","type":"Essay","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"RWDW97411","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama Katolik - Kelas XI (Essay)"},{"subject":"Agama katolik","class_grade":"XI","type":"PG","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"UBFY31905","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama katolik - Kelas XI (PG)"},{"subject":"Agama Kristen","class_grade":"XI","type":"Essay","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"VGXC95506","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama Kristen - Kelas XI (Essay)"},{"subject":"Agama Kristen","class_grade":"XI","type":"PG","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"HGMB09892","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama Kristen - Kelas XI (PG)"},{"subject":"Agama Islam","class_grade":"XI","type":"Essay","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"QZSB85538","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama Islam - Kelas XI (Essay)"},{"subject":"Agama Islam","class_grade":"XI","type":"PG","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"RKDC58672","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Agama Islam - Kelas XI (PG)"},{"subject":"Bahasa Indonesia","class_grade":"X","type":"Essay","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"FEKY25561","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Bahasa Indonesia - Kelas X (Essay)"},{"subject":"Bahasa Indonesia","class_grade":"X","type":"PG","day":"Selasa","date":"15 September 2026","hour":1,"time":"07.00 - 08.30","code":"HGDB79726","publish_status":"NO","publish_date":"","exam_time":"15-09-2026, 07:00:00 GMT","title":"Bahasa Indonesia - Kelas X (PG)"},{"subject":"Geografi","class_grade":"XII","type":"Essay","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"TMWT67627","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Geografi - Kelas XII (Essay)"},{"subject":"Geografi","class_grade":"XII","type":"PG","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"JMVG12743","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Geografi - Kelas XII (PG)"},{"subject":"Ekonomi","class_grade":"XII","type":"Essay","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"RKZW11010","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Ekonomi - Kelas XII (Essay)"},{"subject":"Ekonomi","class_grade":"XII","type":"PG","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"PUCG07411","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Ekonomi - Kelas XII (PG)"},{"subject":"PKWU","class_grade":"XI","type":"Essay","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"EKGS84801","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"PKWU - Kelas XI (Essay)"},{"subject":"PKWU","class_grade":"XI","type":"PG","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"CWNK21533","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"PKWU - Kelas XI (PG)"},{"subject":"Sejarah","class_grade":"X","type":"Essay","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"TUHA81804","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Sejarah - Kelas X (Essay)"},{"subject":"Sejarah","class_grade":"X","type":"PG","day":"Senin","date":"14 September 2026","hour":3,"time":"11.00 - 12.30","code":"XWVF01210","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 11:00:00 GMT","title":"Sejarah - Kelas X (PG)"},{"subject":"PKWU","class_grade":"XII","type":"Essay","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"GYAK03786","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"PKWU - Kelas XII (Essay)"},{"subject":"PKWU","class_grade":"XII","type":"PG","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"LSFU62715","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"PKWU - Kelas XII (PG)"},{"subject":"Geografi","class_grade":"XI","type":"Essay","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"BNQE38685","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Geografi - Kelas XI (Essay)"},{"subject":"Geografi","class_grade":"XI","type":"PG","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"WWCF83623","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Geografi - Kelas XI (PG)"},{"subject":"Biologi","class_grade":"XI","type":"Essay","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"PWNX25474","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Biologi - Kelas XI (Essay)"},{"subject":"Biologi","class_grade":"XI","type":"PG","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"HZKL80763","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Biologi - Kelas XI (PG)"},{"subject":"Bahasa Inggris TL","class_grade":"XI","type":"Essay","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"XPLX85367","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Bahasa Inggris TL - Kelas XI (Essay)"},{"subject":"Bahasa Inggris TL","class_grade":"XI","type":"PG","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"JRTW15954","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Bahasa Inggris TL - Kelas XI (PG)"},{"subject":"Fisika","class_grade":"X","type":"Essay","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"TAZB44655","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Fisika - Kelas X (Essay)"},{"subject":"Fisika","class_grade":"X","type":"PG","day":"Senin","date":"14 September 2026","hour":2,"time":"09.00 - 10.30","code":"UPNM28571","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 09:00:00 GMT","title":"Fisika - Kelax X (PG)"},{"subject":"Bahasa Indonesia","class_grade":"XII","type":"Essay","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"TFEE64368","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Bahasa Indonesia - Kelas XII (Essay)"},{"subject":"Bahasa Indonesia","class_grade":"XII","type":"PG","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"FVUP35709","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Bahasa Indonesia - Kelax XII (PG)"},{"subject":"Matematika","class_grade":"XI","type":"Essay","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"ZNKQ06076","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Matematika - Kelas XI (Essay)"},{"subject":"Matematika","class_grade":"XI","type":"PG","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"ZDLN16093","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Matematika - Kelax XI (PG)"},{"subject":"Bahasa Inggris","class_grade":"X","type":"Essay","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"HLXL29605","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Bahasa Inggris - Kelax X (Essay)"},{"subject":"Bahasa Inggris","class_grade":"X","type":"PG","day":"Senin","date":"14 September 2026","hour":1,"time":"07.00 - 08.30","code":"BQNQ29165","publish_status":"NO","publish_date":"","exam_time":"14-09-2026, 07:00:00 GMT","title":"Bahasa Inggris - Kelas X (PG)"}];
-
-const USERS = {
-  "trgntrg24": "3eb3fe66b31e3b4d10fa70b5cad49c7112294af6ae4e476a1c405155d45aa121",
-  "davidhnadeak": "b06d31d260ca33a78399a9f0ea0afbaafbc839c5989d45981bcb8a77b8e39799"
-};
-
-const state = {
-  filtered: [...EXAM_DATA],
-  page: 1,
-  pageSize: 15
-};
-
-const els = {
-  loginView: document.getElementById('loginView'),
-  appView: document.getElementById('appView'),
-  loginForm: document.getElementById('loginForm'),
-  loginError: document.getElementById('loginError'),
-  username: document.getElementById('username'),
-  password: document.getElementById('password'),
-  togglePassword: document.getElementById('togglePassword'),
-  logoutBtn: document.getElementById('logoutBtn'),
-  loggedUser: document.getElementById('loggedUser'),
-  search: document.getElementById('searchFilter'),
-  classFilter: document.getElementById('classFilter'),
-  hourFilter: document.getElementById('hourFilter'),
-  subjectFilter: document.getElementById('subjectFilter'),
-  typeFilter: document.getElementById('typeFilter'),
-  dayFilter: document.getElementById('dayFilter'),
-  timeFilter: document.getElementById('timeFilter'),
-  pageSize: document.getElementById('pageSize'),
-  resetBtn: document.getElementById('resetBtn'),
-  tableBody: document.getElementById('tableBody'),
-  resultCount: document.getElementById('resultCount'),
-  paginationInfo: document.getElementById('paginationInfo'),
-  paginationControls: document.getElementById('paginationControls'),
-  statTotal: document.getElementById('statTotal'),
-  statClasses: document.getElementById('statClasses'),
-  statSubjects: document.getElementById('statSubjects'),
-  statTokens: document.getElementById('statTokens'),
-  modalBackdrop: document.getElementById('modalBackdrop'),
-  modalClose: document.getElementById('modalClose'),
-  modalBody: document.getElementById('modalBody')
-};
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-}
-
-function visualTheme(x) {
-  const classTheme = {
-    X:   ['#eff6ff','#93c5fd','#1d4ed8'],
-    XI:  ['#f5f3ff','#c4b5fd','#6d28d9'],
-    XII: ['#ecfdf5','#86efac','#15803d']
-  }[x.class_grade] || ['#f8fafc','#cbd5e1','#475569'];
-  const typeTheme = x.type === 'PG'
-    ? ['#eef2ff','#a5b4fc','#4338ca']
-    : ['#fff7ed','#fdba74','#c2410c'];
-  const timeTheme = {
-    '06.30 - 08.00':['#fdf2f8','#f9a8d4','#be185d'],
-    '07.00 - 08.30':['#fff1f2','#fda4af','#be123c'],
-    '08.15 - 09.45':['#ecfeff','#67e8f9','#0e7490'],
-    '09.00 - 10.30':['#eff6ff','#93c5fd','#1d4ed8'],
-    '10.00 - 11.30':['#f0fdf4','#86efac','#15803d'],
-    '11.00 - 12.30':['#fffbeb','#fcd34d','#a16207']
-  }[x.time] || ['#f8fafc','#cbd5e1','#475569'];
-  const hourTheme = {
-    1:['#ecfeff','#67e8f9','#0e7490'],
-    2:['#fdf4ff','#e9d5ff','#86198f'],
-    3:['#f0fdf4','#86efac','#166534'],
-    4:['#fff7ed','#fdba74','#c2410c'],
-    5:['#eff6ff','#93c5fd','#1d4ed8']
-  }[x.hour] || ['#f8fafc','#cbd5e1','#475569'];
-  return {
-    style:`--class-bg:${classTheme[0]};--class-border:${classTheme[1]};--class-text:${classTheme[2]};--type-bg:${typeTheme[0]};--type-border:${typeTheme[1]};--type-text:${typeTheme[2]};--time-bg:${timeTheme[0]};--time-border:${timeTheme[1]};--time-text:${timeTheme[2]};--hour-bg:${hourTheme[0]};--hour-border:${hourTheme[1]};--hour-text:${hourTheme[2]};`
-  };
-}
-
-function hashText(text) {
-  // SHA-256 via Web Crypto where available.
-  if (window.crypto && crypto.subtle) {
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(buf =>
-      Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('')
-    );
-  }
-  return Promise.resolve(text); // fallback never matches the SHA-256 hashes above
-}
-
-function initFilters() {
-  const unique = (arr) => [...new Set(arr.filter(Boolean))];
-  unique(EXAM_DATA.map(x => x.class_grade)).forEach(v => els.classFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`));
-  unique(EXAM_DATA.map(x => x.hour)).sort((a,b) => a-b).forEach(v => els.hourFilter.insertAdjacentHTML('beforeend', `<option value="${v}">Jam ke-${v}</option>`));
-  unique(EXAM_DATA.map(x => x.subject)).sort((a,b)=>a.localeCompare(b,'id')).forEach(v => els.subjectFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`));
-  unique(EXAM_DATA.map(x => x.day)).forEach(v => els.dayFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`));
-  unique(EXAM_DATA.map(x => x.time)).sort().forEach(v => els.timeFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`));
-}
-
-function updateStats() {
-  const data = state.filtered;
-  els.statTotal.textContent = data.length;
-  els.statClasses.textContent = new Set(data.map(x => x.class_grade)).size;
-  els.statSubjects.textContent = new Set(data.map(x => x.subject)).size;
-  els.statTokens.textContent = new Set(data.map(x => x.code)).size;
-}
-
-function applyFilters() {
-  const q = els.search.value.trim().toLowerCase();
-  const cls = els.classFilter.value;
-  const hour = els.hourFilter.value;
-  const subject = els.subjectFilter.value;
-  const type = els.typeFilter.value;
-  const day = els.dayFilter.value;
-  const time = els.timeFilter.value;
-
-  state.filtered = EXAM_DATA.filter(x => {
-    const haystack = [x.subject, x.class_grade, x.type, x.day, x.date, x.time, x.code, x.title].join(' ').toLowerCase();
-    return (!q || haystack.includes(q))
-      && (!cls || x.class_grade === cls)
-      && (!hour || String(x.hour) === hour)
-      && (!subject || x.subject === subject)
-      && (!type || x.type === type)
-      && (!day || x.day === day)
-      && (!time || x.time === time);
-  });
-  state.page = 1;
-  updateStats();
-  renderTable();
-}
-
-function renderTable() {
-  const total = state.filtered.length;
-  const pages = Math.max(1, Math.ceil(total / state.pageSize));
-  if (state.page > pages) state.page = pages;
-  const start = (state.page - 1) * state.pageSize;
-  const end = Math.min(start + state.pageSize, total);
-  const rows = state.filtered.slice(start, end);
-
-  els.resultCount.textContent = total === EXAM_DATA.length ? `Menampilkan seluruh ${total} data` : `Menampilkan ${total} dari ${EXAM_DATA.length} data`;
-  els.paginationInfo.textContent = total ? `Data ${start+1}–${end} dari ${total}` : 'Tidak ada data';
-
-  if (!rows.length) {
-    els.tableBody.innerHTML = `<tr><td colspan="8"><div class="empty"><i class="fa-regular fa-folder-open"></i><div>Tidak ada data yang sesuai filter.</div></div></td></tr>`;
-  } else {
-    els.tableBody.innerHTML = rows.map((x,i) => `
-      <tr style="${visualTheme(x).style}">
-        <td data-label="No"><span class="row-number">${start+i+1}</span></td>
-        <td class="subject-cell" data-label="Ujian">
-          <div class="subject-title">${escapeHtml(x.subject)}</div>
-          <div class="subject-meta">
-            <span class="badge badge-class"><i class="fa-solid fa-graduation-cap"></i> Kelas ${escapeHtml(x.class_grade)}</span>
-            <span class="badge badge-type"><i class="fa-solid fa-list-check"></i> ${escapeHtml(x.type)}</span>
-          </div>
-        </td>
-        <td class="date-cell" data-label="Hari / Tanggal">
-          <div class="schedule"><i class="fa-regular fa-calendar-days" style="margin-right:5px"></i>${escapeHtml(x.day)}, ${escapeHtml(x.date)}</div>
-          <div class="schedule-sub">Jadwal sumber: ${escapeHtml(x.day)}, ${escapeHtml(x.date)}</div>
-        </td>
-        <td data-label="Jam"><span class="badge badge-hour"><i class="fa-regular fa-clock"></i> Jam ke-${escapeHtml(x.hour)}</span></td>
-        <td data-label="Waktu"><span class="badge badge-time"><i class="fa-solid fa-stopwatch"></i> ${escapeHtml(x.time)}</span></td>
-        <td data-label="Token Ujian">
-          <div class="token-cell">
-            <span class="token-code">${escapeHtml(x.code)}</span>
-            <button class="copy-btn" data-copy="${escapeHtml(x.code)}"><i class="fa-regular fa-copy"></i> Salin</button>
-          </div>
-        </td>
-        <td data-label="Publish"><span class="publish ${String(x.publish_status).toUpperCase()==='YES'?'yes':'no'}">${escapeHtml(x.publish_status || '-')}</span></td>
-        <td data-label="Aksi"><button class="copy-btn" data-detail="${escapeHtml(x.code)}"><i class="fa-regular fa-eye"></i> Detail</button></td>
-      </tr>
-    `).join('');
-  }
-  renderPagination(pages);
-}
-
-function renderPagination(pages) {
-  const controls=[];
-  controls.push(`<button class="pg-btn" ${state.page===1?'disabled':''} data-page="${state.page-1}"><i class="fa-solid fa-chevron-left"></i></button>`);
-  const visible = new Set([1,pages,state.page-1,state.page,state.page+1].filter(n=>n>=1&&n<=pages));
-  const nums=[...visible].sort((a,b)=>a-b);
-  let prev=0;
-  nums.forEach(n => {
-    if(n-prev>1) controls.push(`<span style="padding:0 4px;color:#98a2b3">…</span>`);
-    controls.push(`<button class="pg-btn ${n===state.page?'active':''}" data-page="${n}">${n}</button>`);
-    prev=n;
-  });
-  controls.push(`<button class="pg-btn" ${state.page===pages?'disabled':''} data-page="${state.page+1}"><i class="fa-solid fa-chevron-right"></i></button>`);
-  els.paginationControls.innerHTML=controls.join('');
-}
-
-function showToast(message, success=true) {
-  const node=document.createElement('div');
-  node.className='toast';
-  node.innerHTML=`<i class="fa-solid ${success?'fa-circle-check':'fa-circle-exclamation'}"></i> ${escapeHtml(message)}`;
-  document.body.appendChild(node);
-  setTimeout(()=>node.remove(),1800);
-}
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast('Token berhasil disalin');
-  } catch {
-    const ta=document.createElement('textarea');
-    ta.value=text; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); showToast('Token berhasil disalin'); }
-    catch { showToast('Gagal menyalin token', false); }
-    ta.remove();
-  }
-}
-
-function openDetail(code) {
-  const x=EXAM_DATA.find(v=>v.code===code);
-  if(!x) return;
-  els.modalBody.innerHTML=`
-    <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">Mata Pelajaran</div><div class="detail-value">${escapeHtml(x.subject)}</div></div>
-      <div class="detail-item"><div class="detail-label">Kelas</div><div class="detail-value">Kelas ${escapeHtml(x.class_grade)}</div></div>
-      <div class="detail-item"><div class="detail-label">Jenis Soal</div><div class="detail-value">${escapeHtml(x.type)}</div></div>
-      <div class="detail-item"><div class="detail-label">Hari / Tanggal</div><div class="detail-value">${escapeHtml(x.day)}, ${escapeHtml(x.date)}</div></div>
-      <div class="detail-item"><div class="detail-label">Jam Ke</div><div class="detail-value">Jam ke-${escapeHtml(x.hour)}</div></div>
-      <div class="detail-item"><div class="detail-label">Waktu Ujian</div><div class="detail-value">${escapeHtml(x.time)}</div></div>
-      <div class="detail-item"><div class="detail-label">Publish Status</div><div class="detail-value">${escapeHtml(x.publish_status || '-')}</div></div>
-      <div class="detail-item"><div class="detail-label">Publish Date</div><div class="detail-value">${escapeHtml(x.publish_date || '-')}</div></div>
-    </div>
-    <div class="modal-token">
-      <div class="modal-token-label">TOKEN / KODE UJIAN</div>
-      <div class="modal-token-row">
-        <div class="modal-token-code">${escapeHtml(x.code)}</div>
-        <button class="copy-btn" id="modalCopy"><i class="fa-regular fa-copy"></i> Salin Token</button>
-      </div>
-      <div class="note">Nilai token diambil dari field <b>Kode / data-code</b> pada HTML sumber yang Anda berikan.</div>
-    </div>
-  `;
-  document.getElementById('modalCopy').addEventListener('click',()=>copyText(x.code));
-  els.modalBackdrop.classList.remove('hidden');
-}
-
-function loginSuccess(username) {
-  sessionStorage.setItem('exam_user', username);
-  els.loggedUser.textContent=username;
-  els.loginView.classList.add('hidden');
-  els.appView.classList.remove('hidden');
-  applyFilters();
-}
-
-function logout() {
-  sessionStorage.removeItem('exam_user');
-  els.appView.classList.add('hidden');
-  els.loginView.classList.remove('hidden');
-  els.password.value='';
-}
-
-els.loginForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  const username=els.username.value.trim();
-  const password=els.password.value;
-  const hash=await hashText(password);
-  if (USERS[username] && USERS[username]===hash) {
-    els.loginError.classList.add('hidden');
-    loginSuccess(username);
-  } else {
-    els.loginError.textContent='Username atau password salah.';
-    els.loginError.classList.remove('hidden');
-  }
-});
-
-els.togglePassword.addEventListener('click',()=>{
-  const hidden=els.password.type==='password';
-  els.password.type=hidden?'text':'password';
-  els.togglePassword.innerHTML=hidden?'<i class="fa-regular fa-eye-slash"></i>':'<i class="fa-regular fa-eye"></i>';
-});
-
-els.logoutBtn.addEventListener('click',logout);
-
-[els.search,els.classFilter,els.hourFilter,els.subjectFilter,els.typeFilter,els.dayFilter,els.timeFilter].forEach(el=>el.addEventListener('input',applyFilters));
-els.pageSize.addEventListener('change',()=>{state.pageSize=Number(els.pageSize.value);state.page=1;renderTable();});
-els.resetBtn.addEventListener('click',()=>{
-  els.search.value=''; els.classFilter.value=''; els.hourFilter.value=''; els.subjectFilter.value=''; els.typeFilter.value=''; els.dayFilter.value=''; els.timeFilter.value='';
-  applyFilters();
-});
-
-els.tableBody.addEventListener('click',e=>{
-  const copy=e.target.closest('[data-copy]');
-  if(copy) copyText(copy.dataset.copy);
-  const detail=e.target.closest('[data-detail]');
-  if(detail) openDetail(detail.dataset.detail);
-});
-els.paginationControls.addEventListener('click',e=>{
-  const btn=e.target.closest('[data-page]');
-  if(!btn || btn.disabled) return;
-  state.page=Number(btn.dataset.page); renderTable();
-});
-els.modalClose.addEventListener('click',()=>els.modalBackdrop.classList.add('hidden'));
-els.modalBackdrop.addEventListener('click',e=>{if(e.target===els.modalBackdrop) els.modalBackdrop.classList.add('hidden')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape') els.modalBackdrop.classList.add('hidden')});
-
-initFilters();
-const existing=sessionStorage.getItem('exam_user');
-if(existing && USERS[existing]) loginSuccess(existing);
-</script>
-
-<div id="accountBackdrop" class="modal-backdrop hidden">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
-    <div class="modal-head">
-      <div class="modal-title" id="accountModalTitle">Tambah Akun</div>
-      <button class="modal-close" id="accountClose" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <p class="account-help">Akun tambahan disimpan di localStorage browser dalam bentuk hash SHA-256. Akun bawaan tetap tersedia.</p>
-      <div class="account-list" id="accountUserList"></div>
-      <form id="accountForm">
-        <div class="form-group">
-          <label class="form-label" for="accountUsername">Username</label>
-          <div class="input-wrap">
-            <i class="fa-regular fa-user"></i>
-            <input id="accountUsername" autocomplete="off" placeholder="Username baru" required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="accountPassword">Password</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-lock"></i>
-            <input id="accountPassword" type="password" autocomplete="new-password" placeholder="Password baru" required>
-          </div>
-        </div>
-        <div id="accountError" class="account-error hidden"></div>
-        <button class="login-btn" type="submit"><i class="fa-solid fa-user-plus"></i>&nbsp; Simpan Akun</button>
+      <form id="loginForm" class="login-form">
+        <label>Username<input id="username" autocomplete="username" placeholder="Masukkan username" required></label>
+        <label>Password
+          <span class="password-field">
+            <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required>
+            <button id="togglePassword" type="button" class="icon-btn" title="Tampilkan password" aria-label="Tampilkan password"></button>
+          </span>
+        </label>
+        <button class="btn btn-primary btn-wide" type="submit"><span class="ico" data-icon="login"></span> Masuk</button>
+        <div id="loginError" class="alert hidden">Username atau password salah.</div>
       </form>
+      <div class="login-note">Aplikasi statis untuk penggunaan lokal/internal.</div>
     </div>
-  </div>
-</div>
+  </section>
 
-<script type="module" src="./js/app.js"></script>
-
-<!-- Copy Preview Modal -->
-<div id="copyPreviewBackdrop" class="modal-backdrop hidden">
-  <div class="modal copy-preview-modal" role="dialog" aria-modal="true" aria-labelledby="copyPreviewTitle">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title" id="copyPreviewTitle">Hasil Token Filter</div>
-        <div class="copy-preview-subtitle">
-          Teks hasil filter. Anda dapat mengedit, memilih, lalu menyalinnya.
+  <section id="app" class="app hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="app-mark">CBT</div>
+        <div>
+          <strong>Token Dashboard</strong>
+          <small>STS Ganjil 2026/2027</small>
         </div>
       </div>
-      <button class="modal-close" id="copyPreviewClose" type="button" aria-label="Tutup">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <div class="modal-body copy-preview-body">
-      <div class="copy-preview-meta" id="copyPreviewMeta">0 token</div>
-
-      <textarea
-        id="copyPreviewText"
-        class="copy-preview-text"
-        spellcheck="false"
-        aria-label="Hasil token filter"
-      ></textarea>
-
-      <div class="copy-preview-actions">
-        <button class="toolbar-btn primary copy-preview-copy" id="copyPreviewCopy" type="button">
-          <i class="fa-regular fa-copy"></i>
-          Salin ke Clipboard
-        </button>
-
-        <button class="toolbar-btn" id="copyPreviewSelectAll" type="button">
-          <i class="fa-solid fa-highlighter"></i>
-          Pilih Semua
-        </button>
-
-        <button class="toolbar-btn" id="copyPreviewCloseBottom" type="button">
-          <i class="fa-solid fa-xmark"></i>
-          Tutup
-        </button>
+      <div class="topbar-right">
+        <span id="currentUser" class="user-pill"></span>
+        <button id="logoutBtn" class="btn btn-light"><span class="ico" data-icon="logout"></span> Keluar</button>
       </div>
+    </header>
 
-      <div class="copy-preview-note">
-        <i class="fa-solid fa-circle-info"></i>
-        Jika clipboard diblokir browser, gunakan <b>Pilih Semua</b> lalu tekan
-        <b>Ctrl+C</b> (Windows/Linux) atau <b>⌘+C</b> (macOS).
+    <main class="container">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">EXAM TOKEN MANAGER</div>
+          <h2>Data Token Ujian</h2>
+          <p>132 ruang ujian • token unik • filter dinamis • salin massal.</p>
+        </div>
+        <div class="hero-actions">
+          <button id="copyFilteredBtn" class="btn btn-primary"><span class="ico" data-icon="copy"></span> Salin Token Terfilter</button>
+          <button id="resetBtn" class="btn btn-light"><span class="ico" data-icon="refresh"></span> Reset</button>
+        </div>
+      </section>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="panel filters-panel">
+        <div class="panel-title">
+          <div>
+            <h3>Filter & Pencarian</h3>
+            <p>Gunakan kombinasi filter untuk menemukan ruang ujian tertentu.</p>
+          </div>
+          <span id="resultCount" class="result-count"></span>
+        </div>
+        <div class="filter-grid">
+          <label class="search-field span-2">Cari
+            <span class="input-icon">
+              <span class="ico" data-icon="search"></span>
+              <input id="search" placeholder="Mapel, token, deskripsi, kelas...">
+            </span>
+          </label>
+          <label>Kelas<select id="classFilter"><option value="">Semua Kelas</option></select></label>
+          <label>Jam Ke<select id="jamFilter"><option value="">Semua Jam</option></select></label>
+          <label>Mapel<select id="mapelFilter"><option value="">Semua Mapel</option></select></label>
+          <label>Jenis Soal<select id="typeFilter"><option value="">PG + Essay</option><option value="PG">PG</option><option value="ESSAY">Essay</option></select></label>
+          <label>Hari<select id="dayFilter"><option value="">Semua Hari</option></select></label>
+          <label>Waktu Ujian<select id="timeFilter"><option value="">Semua Waktu</option></select></label>
+          <label>Tanggal<select id="dateFilter"><option value="">Semua Tanggal</option></select></label>
+        </div>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="table-toolbar">
+          <label class="check-all"><input id="selectAll" type="checkbox"><span>Pilih semua hasil filter</span></label>
+          <div class="toolbar-actions">
+            <span id="selectedCount" class="selected-count">0 dipilih</span>
+            <button id="copySelectedBtn" class="btn btn-light"><span class="ico" data-icon="copy"></span> Salin Terpilih</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-col"></th>
+                <th>#</th>
+                <th>Mapel</th>
+                <th>Kelas</th>
+                <th>Jenis</th>
+                <th>Hari / Jam</th>
+                <th>Waktu Ujian</th>
+                <th>Token</th>
+                <th class="action-col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div id="empty" class="empty hidden">
+            <div class="empty-icon"><span class="ico" data-icon="search"></span></div>
+            <strong>Tidak ada data</strong>
+            <p>Ubah filter atau kata pencarian.</p>
+          </div>
+        </div>
+        <div class="pagination">
+          <span id="pageInfo"></span>
+          <div class="pagination-controls">
+            <button id="prevPage" class="btn btn-light btn-small">‹</button>
+            <span id="pageNumber" class="page-number"></span>
+            <button id="nextPage" class="btn btn-light btn-small">›</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <div id="copyModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">COPY RESULT</span>
+          <h3 id="modalTitle">Token</h3>
+        </div>
+        <button class="icon-btn" data-close-modal title="Tutup" aria-label="Tutup"><span class="ico" data-icon="close"></span></button>
+      </div>
+      <div class="modal-meta">
+        <span id="modalCount"></span>
+        <span>•</span>
+        <span>Konten dapat diedit sebelum disalin.</span>
+      </div>
+      <textarea id="copyText" spellcheck="false"></textarea>
+      <div class="modal-actions">
+        <button id="modalCopyBtn" class="btn btn-primary"><span class="ico" data-icon="copy"></span> Salin ke Clipboard</button>
+        <button class="btn btn-light" data-close-modal>Tutup</button>
       </div>
     </div>
   </div>
-</div>
 
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>

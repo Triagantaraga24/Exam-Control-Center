@@ -1,35 +1,45 @@
-# Exam Control Center — Modular
+# CBT Token Dashboard — STS Ganjil 2026/2027
 
-Versi modular dari HTML sumber. Seluruh **132 data ujian** dipertahankan.
+Dashboard statis HTML + CSS + JavaScript berbasis dataset **132 ruang ujian** dari file sumber.
 
-## Struktur
-- `index.html` — markup/UI.
-- `css/styles.css` — seluruh styling.
-- `js/data.js` — data ujian.
-- `js/auth.js` — autentikasi + akun tambahan.
-- `js/state.js` — state dan DOM references.
-- `js/ui.js` — filter, tabel, pagination, detail, copy token, UI akun.
-- `js/utils.js` — helper/hash/copy/theme.
-- `js/app.js` — event wiring dan bootstrap.
+## Validasi dataset
+- Total: 132
+- Kelas X: 40
+- Kelas XI: 48
+- Kelas XII: 44
+- PG: 66
+- Essay: 66
+- Token unik: 132
 
-## Fitur baru
-1. **Salin Token Hasil Filter**: menyalin seluruh token dari `state.filtered`, bukan hanya token pada halaman pagination yang sedang tampil. Setiap token dipisahkan newline dan urutannya mengikuti hasil filter.
-2. **Tambah Akun**: dapat menambah akun baru melalui modal. Akun tambahan disimpan di `localStorage` sebagai hash SHA-256.
-3. Data sumber tetap **132 record**.
+## Fitur
+- Login 3 akun.
+- Filter: pencarian, kelas, jam, mapel, jenis soal, hari, waktu ujian, tanggal.
+- Checkbox per ruang.
+- Pilih semua hasil filter.
+- Salin token satu ruang.
+- Salin semua token hasil filter.
+- Salin semua token terpilih.
+- Modal textarea yang fleksibel/editable sebelum copy.
+- Format copy dikelompokkan berdasarkan jadwal dan kelas.
+- Pagination.
+- Responsive desktop/tablet/mobile.
+- Font sans-serif untuk teks dan monospace untuk angka/token.
+- Ant Design-inspired UI: card, button, tag, spacing, focus state, responsive layout.
+- Dataset dipisahkan dari UI dalam `assets/data.js`.
+
+## Akun
+1. `trgntrg24` / `Admin123!`
+2. `davidhnadeak` / `Admin456#`
+3. `panitiasts2627` / `HopeYadika5!`
 
 ## Menjalankan
-Karena menggunakan JavaScript ES Module (`type="module"`), jalankan melalui web server lokal, misalnya VS Code Live Server atau:
-`python -m http.server 8000`
-lalu buka `http://localhost:8000/`.
+Bisa langsung membuka `index.html`.
 
-> Catatan: autentikasi ini tetap merupakan autentikasi sisi browser. Untuk keamanan produksi, kredensial sebaiknya dipindahkan ke backend.
+Untuk penggunaan yang lebih konsisten:
+```bash
+python -m http.server 8080
+```
+Kemudian buka `http://localhost:8080`.
 
-
-## Clipboard
-Fitur **Salin Token Hasil Filter** menggunakan Clipboard API pada HTTPS/localhost dan fallback `execCommand("copy")` untuk browser yang lebih lama.
-
-Untuk deployment, gunakan:
-- HTTPS (misalnya Netlify/Vercel/GitHub Pages dengan HTTPS), atau
-- localhost saat development.
-
-Membuka `index.html` langsung melalui `file://` dapat membuat JavaScript module diblokir oleh browser dan akses clipboard dibatasi.
+## Catatan keamanan
+Karena ini aplikasi statis, username/password berada di JavaScript client-side. Ini cocok untuk dashboard lokal/internal, **bukan** autentikasi server-side untuk internet publik.
